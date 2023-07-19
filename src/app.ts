@@ -1,16 +1,17 @@
 import express from "express";
+import dotenv from 'dotenv';
 import cors from "cors";
 import lusca from "lusca";
-
-import db from "./db/connection";
-
-// Controllers (route handlers)
-import orgController from "./routes/organization";
 
 // Create Express server
 const app = express();
 
+// Express configuration
+dotenv.config();
+app.set("port", process.env.PORT || 3000);
+
 // Connect to DB
+import db from "./db/connection";
 async function dbConnection() {
   try {
     await db.authenticate();
@@ -27,14 +28,14 @@ async function dbConnection() {
 }
 dbConnection();
 
-// Express configuration
-app.set("port", process.env.PORT || 3000);
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
+
+// Controllers (route handlers)
+import orgController from "./routes/organization";
 
 /**
  * Primary app routes.

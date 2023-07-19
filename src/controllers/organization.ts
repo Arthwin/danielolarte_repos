@@ -20,6 +20,11 @@ export const getOrganizationById = async (req: Request, res: Response) => {
 export const createOrganization = async (req: Request, res: Response) => {
   const { body } = req;
   try {
+    /* await check("email", "Email is not valid").isEmail().run(body.);
+    await check("password", "Password must be at least 4 characters long").isLength({ min: 4 }).run(req);
+    await check("confirmPassword", "Passwords do not match").equals(req.body.password).run(req);
+    await body("email").normalizeEmail({ gmail_remove_dots: false }).run(req);*/
+
     // what if they try to input an id
 
     const orgExists = await Organization.findOne({
