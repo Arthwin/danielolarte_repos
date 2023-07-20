@@ -87,11 +87,10 @@ export const deleteOrganizationById = async (req: Request, res: Response) => {
       msg: "Could not find an organization with the ID: : " + id,
     });
 
-  await organization.update({
-    status: 0,
-  }); // check if were using status to not return existing users
-
+  // await organization.update({status: 0});
   // await organization.destroy();
+  // res.json(organization);
 
-  res.json(organization);
+  const organizations = await Organization.findAll();
+  res.json({ organizations });
 };
