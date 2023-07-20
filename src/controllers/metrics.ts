@@ -47,7 +47,7 @@ export const getMetricsByTribeId = async (req: Request, res: Response) => {
         id_tribe: tribeId,
         state: "E",
         create_time: {
-          [Op.gte]: new Date(`${currentYear - 10}-01-01`),
+          [Op.gte]: new Date(`${currentYear}-01-01`),
           [Op.lt]: new Date(`${currentYear + 1}-01-01`),
         },
       },
