@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/Arthwin/danielolarte_repos/"
   },
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "build": "tsc",
     "start": "nodemon",

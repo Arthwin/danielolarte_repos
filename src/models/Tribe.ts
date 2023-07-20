@@ -3,6 +3,7 @@ import db from "../db/connection";
 import Organization from "./Organization";
 import Repository from "./Repository";
 
+// Define the class
 class Tribe extends Model {
   public id_tribe!: number;
   public id_organization!: number;
@@ -23,13 +24,16 @@ Tribe.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "organization", // refers to table name
-        key: "id_organization", // refers to column name in models table
+        model: "organization", // Refers to table name
+        key: "id_organization", // Refers to column name in models table
       },
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: [1, 50],
+      },
     },
     status: {
       type: DataTypes.INTEGER,

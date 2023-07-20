@@ -2,6 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import db from "../db/connection";
 import Repository from "./Repository";
 
+// Define the class
 class Verification extends Model {
   public id!: number;
   public state!: number;
@@ -14,8 +15,8 @@ Verification.init(
       primaryKey: true,
       allowNull: false,
       references: {
-        model: "repository", // refers to table name
-        key: "id_repository", // refers to column name in models table
+        model: "repository", // Rfers to table name
+        key: "id_repository", // Refers to column name in models table
       },
     },
     state: {
@@ -30,7 +31,7 @@ Verification.init(
   }
 );
 
-// Define the association between Repository and Metrics (1-to-many relationship)
+// Define the association
 Repository.hasOne(Verification, { foreignKey: "id" });
 Verification.belongsTo(Repository, { foreignKey: "id_repository" });
 

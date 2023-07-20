@@ -2,6 +2,7 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 import db from "../db/connection";
 import Repository from "./Repository";
 
+// Define the class
 class Metrics extends Model {
   public id_repository!: number;
   public coverage!: number;
@@ -18,8 +19,8 @@ Metrics.init(
       primaryKey: true,
       allowNull: false,
       references: {
-        model: "repository", // refers to table name
-        key: "id_repository", // refers to column name in models table
+        model: "repository", // Refers to table name
+        key: "id_repository", // Refers to column name in models table
       },
     },
     coverage: {
@@ -50,7 +51,7 @@ Metrics.init(
   }
 );
 
-// Define the association between Repository and Metrics (1-to-many relationship)
+// Define the association
 Repository.hasOne(Metrics, { foreignKey: "id_repository" });
 Metrics.belongsTo(Repository, { foreignKey: "id_repository" });
 

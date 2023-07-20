@@ -2,6 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import db from "../db/connection";
 import Repository from "./Repository";
 
+// Define the class
 class Organization extends Model {
   public id_organization!: number;
   public name!: string;
@@ -20,6 +21,9 @@ Organization.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: [1, 50],
+      },
     },
     status: {
       type: DataTypes.INTEGER,

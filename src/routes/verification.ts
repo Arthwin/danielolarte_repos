@@ -1,11 +1,9 @@
 import { Router } from "express";
-import {
-  getVerification
-} from "../controllers/verification";
+import { getRepoVerification } from "../controllers/verification";
 
 const router = Router();
 
 // GET all
-router.get("/", getVerification);
+router.get("/", getRepoVerification);
 
 export default router;

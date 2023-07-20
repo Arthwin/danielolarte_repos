@@ -1,32 +1,25 @@
 import express from "express";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import cors from "cors";
 import lusca from "lusca";
 
-// Create Express server
 const app = express();
 
 // Express configuration
-dotenv.config();
+dotenv.config(); // Careful, must be done before some imports
 app.set("port", process.env.PORT || 3000);
 
 // Connect to DB
 import db from "./db/connection";
-async function dbConnection() {
+(async () => {
   try {
     await db.authenticate();
     console.log("Database Online");
-  } catch (error: unknown) {
-    console.log(
-      `Database connection error. Please make sure the Database is running. ${
-        error as string
-      }`
-    );
-    // process.exit();
-    // throw new Error(error as string);
+  } catch (error) {
+    console.error("Database connection error:", error);
+    process.exit(1); // Exit the application in case of database connection failure
   }
-}
-dbConnection();
+})();
 
 // Middleware
 app.use(cors());
@@ -34,7 +27,7 @@ app.use(express.json());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 
-// Controllers (route handlers)
+// Controllers
 import orgController from "./routes/organizations";
 import verificationController from "./routes/verification";
 import metricsController from "./routes/metrics";
@@ -51,7 +44,7 @@ app.use("/api/verification", verificationController);
 app.use("/api/metrics", metricsController);
 
 /**
- * Authentication routes. (Sign in)
+ * Authentication routes.
  */
 
 export default app;

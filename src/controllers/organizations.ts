@@ -1,31 +1,39 @@
 import { Request, Response } from "express";
 import Organization from "../models/Organization";
-// import { body, check, validationResult } from "express-validator";
+import * as err from "../config/errorMessages";
 
 export const getOrganizations = async (req: Request, res: Response) => {
-  const organizations = await Organization.findAll();
-  res.json({ organizations });
+  try {
+    // Get all organizations
+    const organizations = await Organization.findAll();
+    res.json({ organizations });
+  } catch (error) {
+    res.status(500).json({ error: err.internalServerErrorMessage });
+  }
 };
 
 export const getOrganizationById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const organization = await Organization.findByPk(id);
-  if (organization) res.json({ organization });
-  else
-    res.status(404).json({
-      msg: `Could't find an organization with ID: ${id}`,
-    });
+  try {
+    // Get organization by id
+    const { id } = req.params;
+    const organization = await Organization.findByPk(id);
+    if (organization) res.json({ organization }); // Check existence
+    else
+      res.status(404).json({
+        msg: err.recordIdInexistentErrorMessage,
+      });
+  } catch (error) {
+    res.status(500).json({ error: err.internalServerErrorMessage });
+  }
 };
 
 export const createOrganization = async (req: Request, res: Response) => {
-  const { body } = req;
   try {
-    /* await check("email", "Email is not valid").isEmail().run(body.);
-    await check("password", "Password must be at least 4 characters long").isLength({ min: 4 }).run(req);
-    await check("confirmPassword", "Passwords do not match").equals(req.body.password).run(req);
-    await body("email").normalizeEmail({ gmail_remove_dots: false }).run(req);*/
+    // Post organization
+    const { body } = req;
 
-    // what if they try to input an id
+    // Prevent the user from entering an "id" field
+    delete body.id;
 
     const orgExists = await Organization.findOne({
       where: {
@@ -33,28 +41,28 @@ export const createOrganization = async (req: Request, res: Response) => {
       },
     });
     if (orgExists)
+      // Check existence
       return res.status(400).json({
-        msg: "An organization with that name already exists: " + body.nombre,
+        msg: err.recordNameExistsErrorMessage,
       });
     const organization = await Organization.create(body);
     res.json(organization);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      msg: "Error creating record, talk to an admin.",
-    });
+    res.status(500).json({ error: err.internalServerErrorMessage });
   }
 };
 
 export const updateOrganizationById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { body } = req;
   try {
-    const organization = await Organization.findByPk(id);
+    // Update organization
+    const { id } = req.params;
+    const { body } = req;
 
+    const organization = await Organization.findByPk(id);
     if (!organization)
+      // Check existence of ID
       return res.status(404).json({
-        msg: "Could not find an organization with the ID: : " + id,
+        msg: err.recordIdInexistentErrorMessage,
       });
 
     const orgExists = await Organization.findOne({
@@ -62,35 +70,42 @@ export const updateOrganizationById = async (req: Request, res: Response) => {
         name: body.name,
       },
     });
+
     if (orgExists)
+      // Check existence of name
       return res.status(400).json({
-        msg: "An organization with that name already exists: " + body.nombre,
+        msg: err.recordNameExistsErrorMessage,
       });
-    // what if they try to update the id?
+
     await organization.update(body);
     res.json(organization);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      msg: "Error updating record, talk to an admin.",
-    });
+    res.status(500).json({ error: err.internalServerErrorMessage });
   }
 };
 
 export const deleteOrganizationById = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  try {
+    // Delete organization by id
+    const { id } = req.params;
 
-  const organization = await Organization.findByPk(id);
+    const organization = await Organization.findByPk(id);
 
-  if (!organization)
-    return res.status(404).json({
-      msg: "Could not find an organization with the ID: : " + id,
-    });
+    if (!organization)
+      // Check existence
+      return res.status(404).json({
+        msg: err.recordIdInexistentErrorMessage,
+      });
 
-  // await organization.update({status: 0});
-  // await organization.destroy();
-  // res.json(organization);
+    // Soft delete
+    // await organization.update({status: 0});
 
-  const organizations = await Organization.findAll();
-  res.json({ organizations });
+    // Hard delete
+    // await organization.destroy();
+
+    const organizations = await Organization.findAll();
+    res.json({ organizations });
+  } catch (error) {
+    res.status(500).json({ error: err.internalServerErrorMessage });
+  }
 };
