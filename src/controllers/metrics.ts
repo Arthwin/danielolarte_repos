@@ -98,7 +98,8 @@ export const getMetricsByTribeId = async (req: Request, res: Response) => {
 
     const repositories = pullRepositories.map((repoData: Repository) => {
       const foundVerification = verification.repositories.find(
-        (repos: Verification) => repos.id === repoData.id_repository
+        (repos: Verification) =>
+          Number(repos.id) === Number(repoData.id_repository)
       ); // Assume mock api gave the correct response
       const repoVerificationValue =
         repoVerificationMapping[foundVerification.state || 605];
