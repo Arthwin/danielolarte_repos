@@ -36,7 +36,8 @@ app.use(lusca.xssProtection(true));
 
 // Controllers (route handlers)
 import orgController from "./routes/organizations";
-import repoController from "./routes/repositories";
+import verificationController from "./routes/verification";
+import metricsController from "./routes/metrics";
 
 /**
  * Primary app routes.
@@ -46,7 +47,8 @@ import repoController from "./routes/repositories";
  * API routes.
  */
 app.use("/api/organizations", orgController);
-app.use("/api/repositories", repoController);
+app.use("/api/verification", verificationController);
+app.use("/api/metrics", metricsController);
 
 /**
  * Authentication routes. (Sign in)
