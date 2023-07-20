@@ -39,7 +39,7 @@ export const getMetricsByTribeId = async (req: Request, res: Response) => {
       id_tribe: tribeId,
       state: "E",
       create_time: {
-        [Op.gte]: new Date(`${currentYear}-01-01`),
+        [Op.gte]: new Date(`${currentYear - 10}-01-01`), //******************************************************************************************************************** */
         [Op.lt]: new Date(`${currentYear + 1}-01-01`),
       },
     },
@@ -48,7 +48,7 @@ export const getMetricsByTribeId = async (req: Request, res: Response) => {
         model: Metrics,
         where: {
           coverage: {
-            [Op.gt]: 0.75,
+            [Op.gt]: 0.1, //******************************************************************************************************************** */
           },
         },
       },
@@ -139,5 +139,46 @@ Y que su cobertura sea superior a 75%
 };
 
 export const getMetricsCsvByTribeId = async (req: Request, res: Response) => {
-  res.json({ msg: "csv" + req.params.tribeId });
+  // Call the getMetricsByTribeId function and capture the result using a temporary response object.
+  const tempRes: any = {
+    json: (result: any) => {
+      // Assuming the getMetricsByTribeId function returns the metrics in JSON format,
+      // you can simply send the same JSON response as the result of getMetricsCsvByTribeId.
+
+      const csvData = jsonToCsv(result.repositories);
+      const filename = "repositories.csv";
+
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${filename}"`
+      );
+      res.status(200).send(csvData);
+
+      //res.json({ res: result, msg: "csv" + req.params.tribeId });
+    },
+    status: (code: number) => res.status(code),
+  };
+  await getMetricsByTribeId(req, tempRes);
 };
+
+// Function to convert JSON to CSV
+function jsonToCsv(data: any[]): string {
+  const csvRows: string[] = [];
+  const headers = Object.keys(data[0]);
+
+  csvRows.push(headers.join(','));
+
+  for (const row of data) {
+    const values = headers.map((header) => {
+      let cellValue = row[header];
+      if (typeof cellValue === 'string' && cellValue.includes(',')) {
+        cellValue = `"${cellValue}"`; // Escape quotes for strings containing commas
+      }
+      return cellValue;
+    });
+    csvRows.push(values.join(','));
+  }
+
+  return csvRows.join('\n');
+}
