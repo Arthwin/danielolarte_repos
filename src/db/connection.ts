@@ -20,6 +20,8 @@ const db = new Sequelize(connectionString,{
     timestamps: false,
   },
 });
+
+// Add auto swap between dev and prod DB
 /*const db = new Sequelize(name, username, password, {
   host,
   dialect: "postgres",

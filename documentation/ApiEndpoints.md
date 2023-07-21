@@ -5,7 +5,7 @@ API Endpoints:
 1. Endpoint to get a list of repository verifications using a mock external API:
 - Get repository verifications:
   ```
-  GET /api/verifications
+  GET /api/verification
   ```
 
 
