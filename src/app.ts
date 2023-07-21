@@ -8,6 +8,7 @@ const app = express();
 // Express configuration
 dotenv.config(); // Careful, must be done before some imports
 app.set("port", process.env.PORT || 3000);
+app.set("env", 'prod');
 
 // Connect to DB
 import db from "./db/connection";

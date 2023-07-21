@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Op } from "sequelize";
 
 import * as err from "../config/errorMessages";
-import callMockVerificationApi from "../middleware/mockVerificationApi";
+import { callMockVerificationApi } from "../middleware/mockVerificationApi";
 import { jsonToCsv } from "../utils/convertJsonToCsv";
 
 import Tribe from "../models/Tribe";
@@ -38,7 +38,7 @@ export const getMetricsByTribeId = async (req: Request, res: Response) => {
     // Repositories
     const currentYear = new Date().getFullYear();
     /*
-      Retornará el detalle de las métricas de los repositorios creados este año
+      Retorna el detalle de las métricas de los repositorios creados este año
       Y que se encuentren habilitados (state: ENABLE)
       Y que su cobertura sea superior a 75%
     */
@@ -123,7 +123,7 @@ export const getMetricsByTribeId = async (req: Request, res: Response) => {
       return transformedRepo;
     });
 
-    res.json({ repositories });
+    res.status(200).json({ repositories });
   } catch (error) {
     res.status(500).json({ error: err.internalServerErrorMessage });
   }

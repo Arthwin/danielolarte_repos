@@ -1,7 +1,7 @@
 import axios from "axios";
 import { externalMockApiUrl } from "../config/externalMockApiConfig";
 
-async function callMockVerificationApi() {
+export async function callMockVerificationApi() {
   // Calling a self hosted mock api as poc
   try {
     // Set the URL of the API
@@ -22,4 +22,3 @@ async function callMockVerificationApi() {
   }
 }
 
-export default callMockVerificationApi;
